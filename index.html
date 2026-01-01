@@ -32,24 +32,31 @@
             <img src="images/product1.jpg" alt="">
             <h3>T-Shirt</h3>
             <p>$15</p>
-            <button onclick="addToCart()">Add to Cart</button>
+            <button onclick="addToCart('T-Shirt', 20)">Add to Cart</button>
         </div>
 
         <div class="product">
             <img src="images/product2.jpg" alt="">
             <h3>Shoes</h3>
             <p>$40</p>
-            <button onclick="addToCart()">Add to Cart</button>
+            <button onclick="addToCart('Sneakers', 50)">Add to Cart</button>
         </div>
 
         <div class="product">
             <img src="images/product3.jpg" alt="">
             <h3>Bag</h3>
             <p>$25</p>
-            <button onclick="addToCart()">Add to Cart</button>
+            <button onclick="addToCart('Watch', 35)">Add to Cart</button>
         </div>
     </div>
 </section>
+<div id="cart-popup" class="cart-popup">
+    <h2>Your Cart</h2>
+    <ul id="cart-list"></ul>
+    <p>Total: $<span id="total-price">0</span></p>
+    <button onclick="checkout()">Checkout</button>
+    <button onclick="toggleCart()">Close</button>
+</div>
 
 <footer id="contact">
     <p>© 2026 MyShop | All Rights Reserved</p>

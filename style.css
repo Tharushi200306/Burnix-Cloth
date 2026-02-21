@@ -1,11 +1,11 @@
 * {
-    margin: 0;
+   margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
-body { background: linear-gradient(135deg, #0f172a, #020617); color:white; }
-/* Profile Image Styling */
+body { background: linear-gradient(135deg, #0f172a, #020617);  color: white;overflow-x: hidden;line-height: 1.6;
+}
 
 
 /* Dropdown Styles */
@@ -22,26 +22,6 @@ body { background: linear-gradient(135deg, #0f172a, #020617); color:white; }
 /* Slider Styles */
 .slider {position: relative;height: 100vh;width: 100%;overflow: hidden;
 }
-
-.slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 50%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.slide.active {
-    opacity: 1;
-}
-
 .content h1 {
     color: white;
     font-size: 50px;
@@ -57,12 +37,11 @@ body { background: linear-gradient(135deg, #0f172a, #020617); color:white; }
     overflow-x: hidden;
     transition: 0.5s; /* Slide වන වේගය */
 }
-
-.overlay { width: 100%; opacity: 0; visibility: hidden; background: rgba(255,255,255,0.95); }
-.overlay.open { opacity: 1; visibility: visible; width: 100%; }
-
-.cart-drawer { width: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.2); }
-.cart-drawer.open { width: 400px; } /* Cart එකේ පළල */
+/* --- Overlays --- */
+.overlay { position: fixed; top:0; left:0; width:0; height:100%; background:rgba(255,255,255,0.98); z-index:2000; transition:0.5s; overflow:hidden; }
+.overlay.open { width:100%; }
+.cart-drawer { position:fixed; top:0; right:0; width:0; height:100%; background:#fff; z-index:2000; transition:0.5s; color:#000; }
+.cart-drawer.open { width:320px; }
 
 .overlay-content {position: relative;top: 25%;width: 80%;margin: auto; text-align: center;
 }
@@ -80,7 +59,20 @@ body { background: linear-gradient(135deg, #0f172a, #020617); color:white; }
 
 /* Navbar & Announcements */
 .announcement-bar { background: #f8f8f8; text-align: center; padding: 10px; font-size: 13px; letter-spacing: 1px; }
-.navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: #fff; position: sticky; top: 0; z-index: 1000; }
+/* --- Navbar Styles --- */
+.navbar {display: flex;justify-content: space-between; align-items: center; padding: 15px 5%;  background: rgba(0, 0, 0, 0.9); position: sticky; top: 0;  z-index: 1000; transition: 0.3s;
+}
+/* Mobile එකේදී අකුරු පොඩි කරන්න */
+@media (max-width: 768px) {
+    .navbar {
+       flex-direction: row; /* එක පෙළට තැබීමට */
+        justify-content: space-between;
+        padding: 10px 10px !important;
+    }
+    .brand-name {
+        font-size: 20px;
+    }
+}
 .nav-links { display: flex; list-style: none; }
 .nav-links li { margin: 0 25px; position: relative; }
 .nav-links a { text-decoration: none; color: #fff; font-weight: 500;font-size: 18px; /* අකුරු වල ප්‍රමාණය (Font Size) වැඩි කිරීම */
@@ -105,23 +97,14 @@ body { background: linear-gradient(135deg, #0f172a, #020617); color:white; }
 
 .tagline {font-size: 14px; color: #666; letter-spacing: 2px;
 }
-.logo-img { width: 80px;  /* පින්තූරයේ පළල */ height: 80px; /* පින්තූරයේ උස */ border-radius: 50%; /* වටකුරු කිරීමට මෙය අත්‍යවශ්‍යයි */  object-fit: cover;  border: 2px solid #333; /* වටේට කුඩා ඉරක් */  margin-right: 15px;
+.logo-img { width: 80px;  /* පින්තූරයේ පළල */ height: 80px; /* පින්තූරයේ උස */ border-radius: 50%; /* වටකුරු කිරීමට මෙය අත්‍යවශ්‍යයි */  object-fit: cover;  border: 2px solid #333; /* වටේට කුඩා ඉරක් */  margin-right: 5px;
 }
 /* Dropdown */
 .submenu { display: none; position: absolute; background: #fff; top: 100%; min-width: 150px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); list-style: none; padding: 10px; }
 .dropdown:hover .submenu { display: block; }
 .submenu li { padding: 5px 0; }
 
-/* Slider */
-.hero-slider { height: 80vh; position: relative; overflow: hidden; }
-.slide { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: center; justify-content: center; }
-.slide.active { opacity: 1; }
-.slide-content h1 { color: #fff; font-size: 50px; text-align: center; }
-.red { color: #ff0000; }
-
 /* Product Hover Swap */
-.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px 0; }
-.product-img { position: relative; overflow: hidden; height: 400px; }
 .product-img img { width: 100%; height: 100%; object-fit: cover; position: absolute; transition: 0.5s; }
 .img-back { opacity: 0; }
 .product-card:hover .img-back { opacity: 1; }
@@ -138,21 +121,33 @@ body { background: linear-gradient(135deg, #0f172a, #020617); color:white; }
 
 /* Layout & Navbar */
 body { margin: 0; font-family: sans-serif; overflow-x: hidden; }
-.navbar { display: flex; justify-content: space-between; padding: 20px 50px; background: #fff; position: sticky; top: 0; z-index: 100; }
 .nav-links { display: flex; list-style: none; }
 .nav-links li { margin: 0 15px; position: relative; }
 .submenu { display: none; position: absolute; background: #fff; padding: 10px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
 .dropdown:hover .submenu { display: block; }
 
 /* Slider Section */
-.hero-slider { height: 80vh; position: relative; }
+.hero-slider { height: 70vh; position: relative;width: 100%;overflow: hidden; }
+@media (max-width: 768px) {
+   height: 100vh !important; /* Phone screen එකේ සම්පූර්ණ උස */
+  }
+
 .slide { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.5s ease-in-out; display: flex; align-items: center; justify-content: center; }
 .slide.active { opacity: 1; }
 .overlay-text h1 { color: white; font-size: 3rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
 .red { color: red; }
+/* Logo එක සහ Content එක හරියටම මැදට ගැනීම */
+    .slide-content {position: absolute;
+        top: 30%; /* උඩ සිට පරතරය - ඔයාට අවශ්‍ය පරිදි වෙනස් කරන්න */
+        left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center;
+    }
+.slide-content h1 {
+        font-size: 45px; /* "B CLASSY" අකුරු වල ප්‍රමාණය */
+ letter-spacing: 5px;
+        font-family: 'Oswald', serif; /* Image එකේ වගේ classy look එකක් ගන්න */ text-transform: uppercase;
+    }
 
 /* Product Grid & Hover Effect */
-.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 50px; }
 .img-container { position: relative; overflow: hidden; height: 350px; }
 .img-container img { width: 100%; height: 100%; object-fit: cover; position: absolute; transition: 0.5s; }
 .img-hover { opacity: 0; }
@@ -190,17 +185,24 @@ body { margin: 0; font-family: sans-serif; overflow-x: hidden; }
     display: flex; /* පින්තූර පේළියට ගනී */
     flex-wrap: nowrap; /* පල්ලෙහාට වැටීම වළක්වයි */
     overflow-x: auto; /* පින්තූර වැඩි නම් එහාට මෙහාට scroll කළ හැක */
-    gap: 15px; /* පින්තූර අතර ඉඩ ප්‍රමාණය */
-    padding: 0 50px;
+    gap: 20px; /* පින්තූර අතර ඉඩ ප්‍රමාණය */
+    padding: 20px;
     scrollbar-width: none; /* Scroll bar එක නොපෙන්වීමට */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
 /* පින්තූර කාඩ් එකේ ප්‍රමාණය */
 .product-card {
     flex: 0 0 23%; /* පේළියකට පින්තූර 4ක් පමණ සිටින ලෙස (100 / 4 = 25%) */
-    min-width: 250px;
-    margin-bottom: 20px;
-    text-align: center;
+    min-width: 250px;margin-bottom: 20px;text-align: center;width: 100%;background: rgba(255, 255, 255, 0.05);border-radius: 15px; padding: 15px;transition: 0.3s;
+}
+/* Mobile වලදී card එකේ size එක adjust කිරීම */
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* පොඩි phone වලට cards 2ක් පෙන්වීමට */
+        gap: 10px;
+        padding: 10px;
+    }
 }
 .product-img {
     position: relative;
@@ -300,22 +302,23 @@ body { margin: 0; font-family: sans-serif; overflow-x: hidden; }
 /*bar -first*/
 .ticker-wrapper {
     width: 100%;
-    background-color: #f5e6d3; /* Video eke thiyena wage light brown/cream paatak */
+    background-color: #f5e6d3;
     color: #333;
-    overflow: hidden; /* Athuru text eka hanganna */
+    overflow: hidden;
     padding: 10px 0;
-    font-family: Arial, sans-serif;
     font-size: 14px;
     font-weight: bold;
     border-bottom: 1px solid #b08888;
     white-space: nowrap;
+    position: relative;
+    z-index: 2001;
 }
-
 .ticker-content {
     display: inline-block;
-    padding-left: 100%; /* Arambaya wenas karanna */
-    animation: ticker-move 30s linear infinite; /* 20s kiyanne text eka yana speed eka */
+    padding-left: 100%;
+    animation: ticker-move 30s linear infinite;
 }
+
 
 .ticker-content span {
     padding: 0 50px; /* Text dekak athara thiyena ida */
@@ -331,34 +334,21 @@ body { margin: 0; font-family: sans-serif; overflow-x: hidden; }
         transform: translateX(-100%);
     }
 }
-
-/*big-photo*/
-
-
-
-
 /* Category Section Styling */
 .category-container {
-    display: flex;
-    gap: 15px;
-    padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
+    display: flex;flex-wrap: wrap; /* අයිතම ඊළඟ පේළියට වැටීමට ඉඩ දෙයි */gap: 15px;padding: 20px;width: 100%;box-sizing: border-box;
 }
 
 .category-card {
-    position: relative;
-    flex: 1;
-    overflow: hidden; /* Photo eka eliyata yana eka nawa ththanna */
-    aspect-ratio: 4 / 5; /* Photo eka lokuyata penna */
-    text-decoration: none;
+    position: relative;flex: 1 1 calc(50% - 20px); /* Desktop එකේ 50% බැගින් දෙකයි */ min-width: 300px;
+    overflow: hidden; /* Photo eka eliyata yana eka nawa ththanna */ aspect-ratio: 4 / 5; /* Photo eka lokuyata penna */ text-decoration: none;
 }
-
-.category-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.25, 0.45, 0.45, 0.95);
+@media (max-width: 600px) {
+    .category-card {
+        flex: 1 1 100%; /* Mobile එකේදී 100% (එකයි) */
+    }
+}
+.category-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.25, 0.45, 0.45, 0.95);
 }
 
 /* Mouse eka uda yaddi saha Phone wala touch karaddi loku wenna */
@@ -438,10 +428,7 @@ body { margin: 0; font-family: sans-serif; overflow-x: hidden; }
 
 
 /* Container holds both cards side-by-side */
-.category-container { display: flex; gap: 15px; padding: 20px; width: 100%; box-sizing: border-box;
-}
-
-.category-card { position: relative; flex: 1; /* This makes both cards equal width */ overflow: hidden;aspect-ratio: 4 / 5; /* Keeps a nice tall portrait shape */
+.category-card { position: relative;  overflow: hidden;aspect-ratio: 4 / 5; /* Keeps a nice tall portrait shape */
     text-decoration: none; height: 500px; /* You can adjust or remove this if using aspect-ratio */
 }
 
@@ -510,13 +497,12 @@ body { margin: 0; font-family: sans-serif; overflow-x: hidden; }
 }
 
 .slider-box {
-    width: 100%;
-    max-width: 900px;
+    width: 90%;margin: 0 auto;
+    max-width: 800px;
     border: 4px solid #a7dda7;
     border-radius: 12px;
-    padding: 60px 40px;
-    background: rgb(214, 205, 222); 
-    height: 400px;
+    padding: 40px 20px;
+    background: rgb(214, 205, 222); height: auto; /* අකුරු වැඩි වුණොත් box එක auto ලොකු වේ */ 
 }
 
 .testi-slide { display: none; animation: fadeEffect 0.8s;}
@@ -666,5 +652,209 @@ body {
         flex: 1 1 100%; /* එක පේළියක එකක් පමණයි */
         max-width: 100%;
     }
+}/* ================= HAMBURGER MENU ================= */
 
+.navbar {
+  position: relative;
+}
+
+/* Hide checkbox */
+#menu-toggle {
+  display: none;
+}
+
+/* Hamburger hidden desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: #000;
+  margin: 4px 0;
+  transition: 0.3s;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    text-align: center;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.4s ease;
+    z-index: 999;
+  }
+
+  .nav-links li {
+    margin: 15px 0;
+  }
+
+  /* When clicked */
+  #menu-toggle:checked ~ .nav-links {
+    max-height: 600px;
+  }
+}.footer-container {
+    background-color: #f9f9f9; /* ලා පැහැති පසුබිම */
+    padding: 40px 10% 20px 10%;
+    font-family: sans-serif;
+    color: #333;
+    border-top: 1px solid #ddd;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* කුඩා screen වලදී යටට යාමට */
+    gap: 30px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.footer-section h3 {
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.footer-section p {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: #666;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 10px;
+}
+
+.footer-section ul li a {
+    text-decoration: none;
+    color: #666;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.footer-section ul li a:hover {
+    color: #000;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 12px;
+    color: #999;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+.slide-content {
+  opacity: 0;
+  transform: translateY(50px) scale(0.95) rotateX(2deg);
+  transition: all 1s ease-out;
+}
+
+.slide.active .slide-content {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotateX(0deg);
+}
+.product-card:hover .img-back {
+  opacity: 1;
+  transform: scale(1.1);
+  filter: brightness(1.1) blur(0.5px);
+}
+
+.product-card:hover .img-front {
+  opacity: 0;
+  transform: scale(0.95);
+  filter: blur(1px);
+}
+.shop-btn:hover, .view-all:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 20px rgba(255,255,255,0.4);
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.dot:hover {
+  transform: scale(1.3);
+  box-shadow: 0 0 15px rgba(255,255,255,0.8);
+}
+/* ================= Preloader ================= */
+#preloader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #0f172a, #020617);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+.preloader-content {
+    text-align: center;
+}
+
+.preloader-logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    animation: logoFadeScale 1.5s ease-in-out infinite alternate;
+}
+
+.preloader-name {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 36px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 12px rgba(0,0,0,0.6);
+    animation: nameFade 5s ease-in-out infinite alternate;
+}
+
+/* Animations */
+@keyframes logoFadeScale {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes nameFade {
+    0% { opacity: 0.5; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 1024px) { /* Tablet */
+    .preloader-logo { width: 190px; height: 190px; }
+    .preloader-name { font-size: 38px; letter-spacing: 4px; }
+}
+
+@media (max-width: 480px) { /* Phone */
+    .preloader-logo { width: 100px; height: 100px; }
+    .preloader-name { font-size: 22px; letter-spacing: 3px; }
 }

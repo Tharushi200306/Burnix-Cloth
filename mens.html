@@ -44,12 +44,14 @@
 
     <!-- Overlays for Search and Cart -->
     <div id="search-overlay" class="overlay">
+       <span class="close-btn">&times;</span>
        <div class="overlay-content">
            <input type="text" placeholder="Search for...">
        </div>
     </div>
     <div id="cart-drawer" class="cart-drawer">
-        <div class="cart-content">
+        <span class="close-btn">&times;</span>
+       <div class="cart-content">
             <p>Your cart is empty</p>
             <button class="shop-btn">CONTINUE SHOPPING</button>
         </div>
@@ -69,6 +71,9 @@
                     <img src="images/your-product-front.jpg" alt="Product Front Image" class="img-front">
                     <img src="images/your-product-back.jpg" alt="Product Back Image" class="img-back">
                     <span class="badge">NEW</span>
+                    <div class="add-to-cart-overlay">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
                 <div class="product-info">
                     <p class="title">New Stylish T-Shirt</p>
@@ -92,6 +97,9 @@
                     <img src="https://via.placeholder.com/400x500?text=Product+2+Front" class="img-front">
                     <img src="https://via.placeholder.com/400x500?text=Product+2+Back" class="img-back">
                     <span class="badge">SOLD OUT</span>
+                    <div class="add-to-cart-overlay">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
                 <div class="product-info">
                     <p class="title">Minimalist Black Pendant Necklace</p>
@@ -114,6 +122,9 @@
                 <div class="product-img">
                     <img src="https://via.placeholder.com/400x500?text=Product+3+Front" class="img-front">
                     <img src="https://via.placeholder.com/400x500?text=Product+3+Back" class="img-back">
+                    <div class="add-to-cart-overlay">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
                 <div class="product-info">
                     <p class="title">Silver Chain Bracelet</p>
@@ -135,6 +146,9 @@
                 <div class="product-img">
                     <img src="https://via.placeholder.com/400x500?text=Product+4+Front" class="img-front">
                     <img src="https://via.placeholder.com/400x500?text=Product+4+Back" class="img-back">
+                    <div class="add-to-cart-overlay">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
                 <div class="product-info">
                     <p class="title">Gold Plated Ring</p>
@@ -156,6 +170,9 @@
                 <div class="product-img">
                     <img src="https://via.placeholder.com/400x500?text=Product+5+Front" class="img-front">
                     <img src="https://via.placeholder.com/400x500?text=Product+5+Back" class="img-back">
+                    <div class="add-to-cart-overlay">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
                 </div>
                 <div class="product-info">
                     <p class="title">Classic Watch</p>
@@ -179,8 +196,27 @@
         <div class="footer-content">
             <div class="footer-section purpose">
                 <h3>PURPOSE</h3>
-                <p>Our mission is to enhance your style with high-quality, affordable accessories.</p>
+                <p>Our mission is to enhance your style with high-quality, affordable accessories. We constantly improve our designs and quality, ensuring you get the best every day.</p>
+                <p>We treat our customers like royalty, providing the best possible service and delivering your favorite pieces quickly so you can enjoy them sooner.</p>
+                <p><strong>Discover the perfect blend of style, quality, and service with us!</strong></p>
             </div>
+
+            <div class="footer-section">
+                <h3>CONNECT WITH US</h3>
+                <p>Follow us on social media for the latest updates and offers.</p>
+                <div class="footer-socials">
+                    <a href="https://www.tiktok.com/@yourprofile" target="_blank" class="social-icon tiktok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://www.facebook.com/yourprofile" target="_blank" class="social-icon facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://wa.me/947XXXXXXXX" target="_blank" class="social-icon whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
             <div class="footer-section links">
                 <h3>MAIN MENU</h3>
                 <ul>
@@ -195,6 +231,7 @@
                     <li><a href="#">Exchange Policy</a></li>
                     <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact Us</a></li>
                 </ul>
             </div>
         </div>

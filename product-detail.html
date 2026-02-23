@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Burnix Cloth</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Oswald:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <a href="index.html" class="logo-link">
+                <img src="WhatsApp Image 2026-01-14 at 22.17.21.jpeg" class="logo-img">
+                <div class="logo-text">
+                    <span class="brand-name">Burnix Cloth</span>
+                    <span class="tagline">Lifestyle</span>
+                </div>
+            </a>
+        </div>
+        <input type="checkbox" id="menu-toggle" hidden>
+        <div class="side-menu">
+            <div class="menu-header">
+                <span>MENU</span>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="mens.html">MENS</a></li>
+                <li><a href="womens.html">WOMENS</a></li>
+                <li><a href="login.html">LOGIN</a></li>
+            </ul>
+        </div>
+        <label for="menu-toggle" class="menu-overlay"></label>
+        <div class="nav-icons">
+            <a href="index.html" style="color: white; text-decoration: none; font-size: 18px; margin-right: 15px;">HOME</a>
+            <label for="menu-toggle" class="hamburger">☰</label>
+        </div>
+    </nav>
+
+    <!-- Product Detail Content -->
+    <div class="detail-page-container">
+        <!-- Left Side: Image Gallery -->
+        <div class="product-gallery">
+            <div class="thumbnails-list">
+                <!-- Thumbnails will be loaded by JS -->
+            </div>
+            <div class="main-image-wrapper">
+                <img id="main-product-image" src="https://via.placeholder.com/600x750?text=Loading..." alt="Main Product Image">
+                <!-- Mobile Slider Controls -->
+                <button class="gallery-nav prev">‹</button>
+                <button class="gallery-nav next">›</button>
+            </div>
+        </div>
+
+        <!-- Right Side: Product Info & Form -->
+        <div class="detail-info-wrapper">
+            <div class="detail-header-row">
+                <h1 id="product-detail-title">Product Name</h1>
+                <p id="product-detail-price" class="detail-price">Rs. 0.00</p>
+            </div>
+
+            <p class="detail-description">
+                High-quality material, designed for maximum comfort and style. Perfect for any occasion. Includes 3-month color warranty.
+            </p>
+
+            <div class="detail-section">
+                <h3>Select Color</h3>
+                <div id="product-detail-colors" class="color-options left-align"></div>
+            </div>
+
+            <div class="detail-section">
+                <h3>Select Size</h3>
+                <div class="size-selector">
+                    <div class="size-btn" onclick="selectSize(this)">S</div>
+                    <div class="size-btn" onclick="selectSize(this)">M</div>
+                    <div class="size-btn active" onclick="selectSize(this)">L</div>
+                    <div class="size-btn" onclick="selectSize(this)">XL</div>
+                    <div class="size-btn" onclick="selectSize(this)">XXL</div>
+                </div>
+            </div>
+
+            <!-- Quantity & Add to Cart -->
+            <div class="detail-section action-section">
+                <div class="quantity-selector-new">
+                    <button class="quantity-btn minus" aria-label="Decrease quantity">-</button>
+                    <input type="text" class="quantity-input" value="1" readonly aria-label="Current quantity">
+                    <button class="quantity-btn plus" aria-label="Increase quantity">+</button>
+                </div>
+                <button class="add-to-cart-main-btn">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                </button>
+            </div>
+
+            <!-- Buy Now Button with Animation -->
+            <div class="buy-now-container">
+                <button class="buy-now-btn" id="buyNowBtn">BUY NOW</button>
+            </div>
+        </div>
+
+        <!-- Customer Comments Section -->
+        <div class="comments-section">
+            <h3>Customer Reviews</h3>
+            
+            <!-- Comment Form -->
+            <div class="comment-form">
+                <div class="star-rating-input">
+                    <i class="far fa-star" data-value="1"></i>
+                    <i class="far fa-star" data-value="2"></i>
+                    <i class="far fa-star" data-value="3"></i>
+                    <i class="far fa-star" data-value="4"></i>
+                    <i class="far fa-star" data-value="5"></i>
+                </div>
+                <input type="text" id="commentName" placeholder="Your Name" required>
+                <textarea id="commentText" rows="3" placeholder="Write a review..."></textarea>
+                <div class="comment-upload-area">
+                    <label for="commentPhoto" class="upload-btn"><i class="fas fa-camera"></i> Add Photo</label>
+                    <input type="file" id="commentPhoto" accept="image/*" hidden>
+                    <img id="photoPreview" src="" alt="Photo Preview" class="photo-preview-hidden">
+                </div>
+                <button id="submitComment">Post Comment</button>
+            </div>
+
+            <!-- Comments List -->
+            <div class="comments-list" id="commentsList">
+                <!-- Sample Comment -->
+                <div class="single-comment">
+                    <div class="comment-header">
+                        <strong>Saman Kumara</strong>
+                        <span class="comment-date">Just now</span>
+                    </div>
+                    <div class="comment-rating">★★★★★</div>
+                    <p>Great product! Highly recommended.</p>
+                    <!-- Action Buttons & Reply Area -->
+                    <div class="comment-actions">
+                        <button class="action-btn reply-btn">Reply</button>
+                    </div>
+                    <div class="reply-form-container">
+                        <textarea rows="2" placeholder="Write a reply..."></textarea>
+                        <button class="submit-reply-btn">Post Reply</button>
+                    </div>
+                    <div class="replies-list">
+                        <!-- Admin replies will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+             <!-- Comment Pagination -->
+            <div class="comment-pagination" id="commentPagination">
+                <!-- Pagination numbers will be added here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Thank You Animation -->
+    <div id="thankYouOverlay" class="thank-you-overlay">
+        <div class="thank-you-box">
+            <div class="thank-you-icon">✔</div>
+            <h2>Thank You!</h2>
+            <p>Your review has been posted.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section purpose">
+                <h3>PURPOSE</h3>
+                <p>Our mission is to enhance your style with high-quality, affordable accessories. We constantly improve our designs and quality, ensuring you get the best every day.</p>
+                <p>We treat our customers like royalty, providing the best possible service and delivering your favorite pieces quickly so you can enjoy them sooner.</p>
+                <p><strong>Discover the perfect blend of style, quality, and service with us!</strong></p>
+            </div>
+
+            <div class="footer-section">
+                <h3>CONNECT WITH US</h3>
+                <p>Follow us on social media for the latest updates and offers.</p>
+                <div class="footer-socials">
+                    <a href="https://www.tiktok.com/@yourprofile" target="_blank" class="social-icon tiktok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://www.facebook.com/yourprofile" target="_blank" class="social-icon facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://wa.me/947XXXXXXXX" target="_blank" class="social-icon whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-section links">
+                <h3>MAIN MENU</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="mens.html">Mens</a></li>
+                    <li><a href="womens.html">Womens</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section links">
+                <h3>INFORMATION & SUPPORT</h3>
+                <ul>
+                    <li><a href="#">Exchange Policy</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BC Classy Lifestyle. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="product-detail.js"></script>
+    <script src="script.js"></script> <!-- For Navbar -->
+</body>
+</html>

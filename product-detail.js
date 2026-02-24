@@ -136,9 +136,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Buy Now Button Logic ---
     const buyNowBtn = document.getElementById('buyNowBtn');
     buyNowBtn?.addEventListener('click', () => {
-        alert("Redirecting to Checkout...");
-        // Here you would typically redirect to a checkout page
-        // window.location.href = 'checkout.html';
+        const title = document.getElementById('product-detail-title').textContent;
+        const price = document.getElementById('product-detail-price').textContent;
+        const quantity = quantityInput.value;
+        const image = mainImage.src;
+
+        const selectedColorEl = document.querySelector('#product-detail-colors .dot.active');
+        const colorClass = selectedColorEl ? Array.from(selectedColorEl.classList).find(c => c !== 'dot' && c !== 'active') : 'Default';
+
+        const selectedSizeEl = document.querySelector('.size-selector .size-btn.active');
+        const size = selectedSizeEl ? selectedSizeEl.textContent : 'Default';
+
+        const itemToBuy = [{
+            title,
+            price,
+            quantity,
+            image,
+            color: colorClass,
+            size
+        }];
+
+        sessionStorage.setItem('burnixCheckoutItems', JSON.stringify(itemToBuy));
+        window.location.href = 'checkout.html';
     });
 
     // --- Comments Logic ---
@@ -225,16 +244,89 @@ document.addEventListener('DOMContentLoaded', () => {
             commentDiv.innerHTML = `
                 <div class="comment-header"><strong>${name}</strong><span>Just now</span></div>
                 <div class="comment-rating">${ratingHTML}</div>
-                <p>${text}</p>
+                <p class="comment-text">${text}</p>
                 ${imageHTML}
+                
+                <!-- Action Buttons (Edit/Delete) -->
+                <div class="comment-actions">
+                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="action-btn delete-btn"><i class="fas fa-trash-alt"></i> Delete</button>
+                </div>
+
+                <!-- Edit Form (Hidden initially) -->
+                <div class="edit-container">
+                    <textarea class="edit-textarea" rows="3">${text}</textarea>
+                    <div class="edit-btn-group">
+                        <button class="save-edit-btn">Save</button>
+                        <button class="cancel-edit-btn">Cancel</button>
+                    </div>
+                </div>
             `;
+            
+            // --- Add Event Listeners for Edit & Delete ---
+            const deleteBtn = commentDiv.querySelector('.delete-btn');
+            const editBtn = commentDiv.querySelector('.edit-btn');
+            const saveBtn = commentDiv.querySelector('.save-edit-btn');
+            const cancelBtn = commentDiv.querySelector('.cancel-edit-btn');
+            const editContainer = commentDiv.querySelector('.edit-container');
+            const commentTextP = commentDiv.querySelector('.comment-text');
+            const actionsDiv = commentDiv.querySelector('.comment-actions');
+            const editTextarea = commentDiv.querySelector('.edit-textarea');
+
+            // Delete Logic
+            deleteBtn.addEventListener('click', () => {
+                if(confirm('Are you sure you want to delete this comment?')) {
+                    commentDiv.classList.add('deleting'); // Animation class
+                    setTimeout(() => commentDiv.remove(), 500); // Remove after animation
+                }
+            });
+
+            // Edit Logic
+            editBtn.addEventListener('click', () => {
+                editContainer.style.display = 'block';
+                commentTextP.style.display = 'none';
+                actionsDiv.style.display = 'none';
+                editTextarea.value = commentTextP.textContent; // Load current text
+            });
+
+            // Save Logic
+            saveBtn.addEventListener('click', () => {
+                const newText = editTextarea.value.trim();
+                if(newText) {
+                    commentTextP.textContent = newText;
+                }
+                // Reset view
+                editContainer.style.display = 'none';
+                commentTextP.style.display = 'block';
+                actionsDiv.style.display = 'flex';
+            });
+
+            // Cancel Logic
+            cancelBtn.addEventListener('click', () => {
+                editContainer.style.display = 'none';
+                commentTextP.style.display = 'block';
+                actionsDiv.style.display = 'flex';
+            });
+
             commentsList.prepend(commentDiv);
             
-            // Show Thank You animation
+            // Show Thank You animation for the user
             thankYouOverlay.classList.add('show');
             setTimeout(() => {
                 thankYouOverlay.classList.remove('show');
             }, 2500); // Hide after 2.5 seconds
+
+            // --- NEW: Show Admin Notification ---
+            const adminNotification = document.getElementById('adminNotification');
+            if (adminNotification) {
+                // Show the notification
+                adminNotification.classList.add('show');
+
+                // Hide it after 5 seconds
+                setTimeout(() => {
+                    adminNotification.classList.remove('show');
+                }, 5000);
+            }
 
             // Clear inputs
             nameInput.value = '';

@@ -149,6 +149,18 @@ window.addEventListener('load', () => {
     }
 });
 
+// Mock User Database (in a real app, this comes from a server)
+// පරිශීලක දත්ත මතක තබා ගැනීමට localStorage භාවිතා කරයි
+const users = JSON.parse(localStorage.getItem('burnixUsers')) || [
+    // Test කිරීම සඳහා නියැදි පරිශීලකයෙක්
+    { name: 'Test User', email: 'test@example.com', password: 'password123' }
+];
+
+function saveUsers() {
+    // නව පරිශීලකයන් localStorage වෙත save කරයි
+    localStorage.setItem('burnixUsers', JSON.stringify(users));
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const dropdowns = document.querySelectorAll('.dropdown');
 
@@ -186,9 +198,255 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('search-btn');
     const searchOverlay = document.getElementById('search-overlay');
     const closeSearchBtn = document.querySelector('#search-overlay .close-btn'); // Close button for search
+    const userBtn = document.getElementById('user-btn');
+    const loginOverlay = document.getElementById('login-overlay');
+    const closeLoginBtn = document.querySelector('#login-overlay .close-btn');
     const cartBtn = document.getElementById('cart-btn');
     const cartDrawer = document.getElementById('cart-drawer');
     const closeCartBtn = document.querySelector('#cart-drawer .close-btn'); // Close button for cart
+
+    // --- නවීන Login/Register පද්ධතිය ---
+    const loginFormEl = document.getElementById('loginForm');
+    const registerFormEl = document.getElementById('registerForm');
+    const userBtnEl = document.getElementById('user-btn');
+
+    // Form එකේ පණිවිඩ පෙන්වීමේ function එක
+    function showAuthMessage(form, message, isError = false) {
+        const messageEl = form.querySelector('.auth-message');
+        if (messageEl) {
+            messageEl.textContent = message;
+            messageEl.className = 'auth-message'; // පන්ති නාම නැවත සකසන්න
+            messageEl.classList.add(isError ? 'error' : 'success');
+        }
+    }
+
+    // Login වූ පසු navigation bar එක update කිරීම
+    function updateNavOnLogin(user) {
+        const initial = user.name.charAt(0).toUpperCase();
+        userBtnEl.textContent = initial;
+        userBtnEl.style.background = '#d4af37';
+        userBtnEl.style.color = 'black';
+        userBtnEl.style.borderRadius = '50%';
+        userBtnEl.style.width = '30px';
+        userBtnEl.style.height = '30px';
+        userBtnEl.style.display = 'inline-flex';
+        userBtnEl.style.alignItems = 'center';
+        userBtnEl.style.justifyContent = 'center';
+        userBtnEl.style.fontWeight = 'bold';
+        userBtnEl.dataset.loggedIn = 'true';
+        userBtnEl.title = `Logged in as ${user.name}. Click to logout.`;
+    }
+
+    // Logout වූ පසු navigation bar එක update කිරීම
+    function updateNavOnLogout() {
+        userBtnEl.textContent = '👤';
+        userBtnEl.style.background = 'none';
+        userBtnEl.style.color = 'white';
+        userBtnEl.style.width = 'auto';
+        userBtnEl.style.height = 'auto';
+        userBtnEl.dataset.loggedIn = 'false';
+        userBtnEl.title = 'Login / Register';
+    }
+
+    // Login ක්‍රියාවලිය
+    function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (user) {
+            showAuthMessage(loginFormEl, 'Login successful! Welcome back.', false);
+            localStorage.setItem('burnixLoggedInUser', JSON.stringify(user));
+            updateNavOnLogin(user);
+            setTimeout(() => {
+                loginOverlay.classList.remove('open');
+                loginFormEl.reset();
+                loginFormEl.querySelector('.auth-message').className = 'auth-message';
+            }, 1500);
+        } else {
+            showAuthMessage(loginFormEl, 'Invalid email or password. Please try again.', true);
+        }
+    }
+
+    // Register ක්‍රියාවලිය
+    function handleRegister(e) {
+        e.preventDefault();
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+
+        if (users.some(u => u.email === email)) {
+            showAuthMessage(registerFormEl, 'An account with this email already exists.', true);
+            return;
+        }
+
+        const newUser = { name, email, password };
+        users.push(newUser);
+        saveUsers();
+
+        showAuthMessage(registerFormEl, 'Registration successful! You are now logged in.', false);
+        localStorage.setItem('burnixLoggedInUser', JSON.stringify(newUser));
+        updateNavOnLogin(newUser);
+
+        setTimeout(() => {
+            loginOverlay.classList.remove('open');
+            registerFormEl.reset();
+            registerFormEl.querySelector('.auth-message').className = 'auth-message';
+            document.querySelector('.register-form').classList.remove('active');
+            document.querySelector('.login-form').classList.add('active');
+        }, 2000);
+    }
+
+    // Logout ක්‍රියාවලිය
+    function handleLogout() {
+        if (confirm('Are you sure you want to logout?')) {
+            localStorage.removeItem('burnixLoggedInUser');
+            updateNavOnLogout();
+        }
+    }
+
+    loginFormEl?.addEventListener('submit', handleLogin);
+    registerFormEl?.addEventListener('submit', handleRegister);
+
+    // --- CART FUNCTIONALITY START ---
+    let cart = JSON.parse(localStorage.getItem('burnixCart')) || [];
+
+    function updateCartTotal() {
+        let total = 0;
+        let selectedItemsCount = 0;
+        let totalItemsCount = cart.length; // Total items for badge
+        const checkboxes = document.querySelectorAll('.cart-item-checkbox:checked');
+        checkboxes.forEach(checkbox => {
+            const index = parseInt(checkbox.dataset.index, 10);
+            const item = cart[index];
+            if (item) {
+                // Ensure price is a string, remove commas, and parse as Float
+                let priceString = String(item.price).replace(/,/g, '');
+                priceString = priceString.replace(/Rs\.?\s*/, ''); // Remove "Rs." and spaces
+
+                let priceVal = parseFloat(priceString);
+
+                if (isNaN(priceVal)) {
+                    console.error(`Invalid price value encountered: ${item.price}.  Setting to 0.`);
+                    priceVal = 0;  // Default to zero if parsing fails
+                }
+
+                selectedItemsCount++;
+                total += priceVal;
+            }
+        });
+
+
+        const totalEl = document.getElementById('cart-total');
+        if (totalEl) {
+            total = Math.max(0, total); // Ensure total is not negative
+            // Daraz වැනි වෙබ් අඩවි වල මිල ගණන් පෙන්වන නවීන ක්‍රමයට සකස් කිරීම.
+            // දශමස්ථාන අවශ්‍ය නම් පමණක් පෙන්වයි. (උදා: Rs. 2,500 or Rs. 2,500.50)
+            const formattedTotal = total.toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+            
+         // අගය වෙනස් වන විට පෙන්වන Animation එක සඳහා
+            // Check if the content is actually changing to avoid re-triggering animation
+            if (totalEl.textContent !== `Rs. ${formattedTotal}`) {
+                totalEl.textContent = `Rs. ${formattedTotal}`;
+                totalEl.classList.add('total-updated');
+                totalEl.addEventListener('animationend', () => {
+                    totalEl.classList.remove('total-updated');
+                }, { once: true });
+            }
+        }
+
+        // --- NEW: Update Cart Badge Count ---
+        const cartBtn = document.getElementById('cart-btn');
+        if (cartBtn) {
+            let badge = cartBtn.querySelector('.cart-count-badge');
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.classList.add('cart-count-badge');
+                cartBtn.appendChild(badge);
+            }
+            badge.textContent = totalItemsCount;
+            badge.style.display = totalItemsCount > 0 ? 'block' : 'none';
+        }
+    }
+
+    function addCartEventListeners() {
+        document.querySelectorAll('.cart-item-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', updateCartTotal);
+        });
+    }
+
+    function updateCartUI() {
+        const cartContent = document.querySelector('.cart-content');
+        if (!cartContent) return;
+
+        if (cart.length === 0) {
+            cartContent.innerHTML = `
+                <p>Your cart is empty</p>
+                <button class="shop-btn" onclick="document.getElementById('cart-drawer').classList.remove('open')">CONTINUE SHOPPING</button>
+            `;
+        } else {
+            let itemsHTML = '<div class="cart-items-scroll" style="max-height: 60vh; overflow-y: auto;">';
+            
+            cart.forEach((item, index) => {
+                itemsHTML += `
+                 <div class="cart-item" style="display: flex; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    <input type="checkbox" class="cart-item-checkbox" data-index="${index}" checked style="margin-right: 10px; transform: scale(1.2); cursor: pointer;">
+                    <a href="product-detail.html?title=${encodeURIComponent(item.title)}&price=${encodeURIComponent(item.price)}&images=${encodeURIComponent(item.image)}" style="text-decoration: none; color: inherit; display: flex; align-items: center; flex: 1;">
+                        <img src="${item.image}" style="width: 60px; height: 75px; object-fit: cover; border-radius: 5px; margin-right: 10px;">
+                        <div style="flex: 1; text-align: left;">
+                            <h4 style="margin: 0; font-size: 14px; color: #333;">${item.title}</h4>
+                            <p style="margin: 5px 0 0; font-size: 13px; color: #777;">${item.price}</p>
+                        </div>
+                    </a>
+                    <button onclick="removeItemFromCart(${index})" style="background: none; border: none; color: red; font-size: 20px; cursor: pointer;">&times;</button>
+                </div>`;
+            });
+            
+            itemsHTML += '</div>';
+            const footerHTML = `
+            <div class="cart-footer" style="margin-top: 15px; border-top: 2px solid #333; padding-top: 15px;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px; color: #000;">
+                    <span>Selected Total:</span>
+                    <span id="cart-total">Rs. 0.00</span>
+                </div>
+                <button class="buy-now-btn-cart" id="buyNowSelected" style="width: 100%;">BUY NOW</button>
+            </div>
+            `;
+            cartContent.innerHTML = itemsHTML + footerHTML;
+
+            addCartEventListeners();
+            updateCartTotal(); // මුලින්ම total එක ගණනය කිරීම
+        }
+        localStorage.setItem('burnixCart', JSON.stringify(cart));
+
+        const buyNowSelectedBtn = document.getElementById('buyNowSelected');
+        buyNowSelectedBtn?.addEventListener('click', () => {
+            const selectedItems = cart.filter((item, index) => {
+                return document.querySelector(`.cart-item-checkbox[data-index="${index}"]`)?.checked;
+            });
+
+            if (selectedItems.length === 0) {
+                alert('කරුණාකර මිලදී ගැනීමට අවශ්‍ය භාණ්ඩ තෝරන්න. (Please select items to buy.)');
+                return;
+            }
+
+            sessionStorage.setItem('burnixCheckoutItems', JSON.stringify(selectedItems));
+            window.location.href = 'checkout.html'; 
+        });
+    }
+
+    window.removeItemFromCart = function(index) {
+        cart.splice(index, 1);
+        updateCartUI(); // item එකක් remove කළ පසු මුළු cart එකම නැවත render කිරීම
+    };
+    
+    // Initial Load
+    updateCartUI();
+    // --- CART FUNCTIONALITY END ---
 
     // Open Search
     searchBtn?.addEventListener('click', () => {
@@ -198,6 +456,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close Search
     closeSearchBtn?.addEventListener('click', () => {
         searchOverlay?.classList.remove('open');
+    });
+
+    // Open Login
+    userBtnEl?.addEventListener('click', () => {
+        const isLoggedIn = userBtnEl.dataset.loggedIn === 'true';
+        if (isLoggedIn) {
+            handleLogout(); // Login වෙලා නම්, logout කරන්න
+        } else {
+            loginOverlay?.classList.add('open'); // නැත්නම්, login overlay එක open කරන්න
+        }
+    });
+
+    // Close Login
+    closeLoginBtn?.addEventListener('click', () => {
+        loginOverlay?.classList.remove('open');
     });
 
     // Open Cart
@@ -219,8 +492,100 @@ document.addEventListener('DOMContentLoaded', function() {
             if (cartDrawer?.classList.contains('open')) {
                 cartDrawer.classList.remove('open');
             }
+            if (loginOverlay?.classList.contains('open')) {
+                loginOverlay.classList.remove('open');
+            }
         }
     });
+
+    // --- NEW: SEARCH BAR FUNCTIONALITY (Real-time Filter) ---
+    const searchInput = document.querySelector('#search-overlay input');
+    
+    // 1. Create Results Container dynamically inside the overlay
+    let searchResultsContainer = document.querySelector('.search-results-container');
+    if (!searchResultsContainer && document.querySelector('.overlay-content')) {
+        searchResultsContainer = document.createElement('div');
+        searchResultsContainer.className = 'search-results-container';
+        document.querySelector('.overlay-content').appendChild(searchResultsContainer);
+    }
+
+    // 2. Product Database (Mock Data - ඔබගේ වෙබ් අඩවියේ ඇති භාණ්ඩ මෙහි ඇතුළත් කර ඇත)
+    const productsDB = [
+        { title: "New Stylish T-Shirt", price: "Rs. 2,500.00", image: "images/your-product-front.jpg" },
+        { title: "Minimalist Black Pendant Necklace", price: "Rs. 1,750.00", image: "https://via.placeholder.com/400x500?text=Product+2+Front" },
+        { title: "Silver Chain Bracelet", price: "Rs. 3,200.00", image: "https://via.placeholder.com/400x500?text=Product+3+Front" },
+        { title: "Gold Plated Ring", price: "Rs. 1,500.00", image: "https://via.placeholder.com/400x500?text=Product+4+Front" },
+        { title: "Classic Watch", price: "Rs. 5,500.00", image: "https://via.placeholder.com/400x500?text=Product+5+Front" },
+        { title: "Stylish Blouse", price: "Rs. 3,500.00", image: "https://via.placeholder.com/400x500?text=Womens+Product+1" },
+        { title: "Elegant Dress", price: "Rs. 4,750.00", image: "https://via.placeholder.com/400x500?text=Womens+Product+2" },
+        { title: "Casual Skirt", price: "Rs. 2,200.00", image: "https://via.placeholder.com/400x500?text=Womens+Product+3" },
+        { title: "Handbag", price: "Rs. 3,000.00", image: "https://via.placeholder.com/400x500?text=Womens+Product+4" },
+        { title: "High Heels", price: "Rs. 4,500.00", image: "https://via.placeholder.com/400x500?text=Womens+Product+5" }
+    ];
+
+    // 3. Real-time Filtering Logic
+    searchInput?.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        searchResultsContainer.innerHTML = ''; // Clear previous results
+
+        if (searchTerm.length > 0) {
+            // Filter products based on title
+            const filteredProducts = productsDB.filter(product => 
+                product.title.toLowerCase().includes(searchTerm)
+            );
+
+            if (filteredProducts.length > 0) {
+                // Render Results
+                filteredProducts.forEach(product => {
+                    const resultItem = document.createElement('a');
+                    // Link to product detail page with parameters
+                    resultItem.href = `product-detail.html?title=${encodeURIComponent(product.title)}&price=${encodeURIComponent(product.price)}&images=${encodeURIComponent(product.image)}`;
+                    resultItem.className = 'search-result-item';
+                    
+                    resultItem.innerHTML = `
+                        <img src="${product.image}" alt="${product.title}" class="search-result-img">
+                        <div class="search-result-title">${product.title}</div>
+                        <div class="search-result-price">${product.price}</div>
+                    `;
+                    searchResultsContainer.appendChild(resultItem);
+                });
+            } else {
+                searchResultsContainer.innerHTML = '<div class="no-results">No products found</div>';
+            }
+        }
+    });
+
+    // Clear search when closed
+    closeSearchBtn?.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        if (searchResultsContainer) searchResultsContainer.innerHTML = '';
+    });
+
+    // --- NEW: Login/Register Switch Logic ---
+    const loginForm = document.querySelector('.login-form');
+    const registerForm = document.querySelector('.register-form');
+    const goToRegisterBtn = document.getElementById('go-to-register');
+    const goToLoginBtn = document.getElementById('go-to-login');
+
+    goToRegisterBtn?.addEventListener('click', () => {
+        loginForm.classList.remove('active');
+        registerForm.classList.add('active');
+    });
+
+    goToLoginBtn?.addEventListener('click', () => {
+        registerForm.classList.remove('active');
+        loginForm.classList.add('active');
+    });
+
+    // --- පිටුව load වන විට login තත්ත්වය පරීක්ෂා කිරීම ---
+    function checkLoginStatus() {
+        const loggedInUser = JSON.parse(localStorage.getItem('burnixLoggedInUser'));
+        if (loggedInUser) {
+            updateNavOnLogin(loggedInUser);
+        } else {
+            updateNavOnLogout();
+        }
+    }
 
     // 3. Handle Product Card Clicks to go to Detail Page
     // Ensuring click listeners are applied on all pages like Mens, Womens, etc.
@@ -230,6 +595,30 @@ document.addEventListener('DOMContentLoaded', function() {
     productCards.forEach(card => {
         // Click කළ හැකි ප්‍රදේශය වන්නේ product image එක ඇති කොටසයි. "Add to Cart" button එකද එහි අඩංගු වේ.
         const clickableArea = card.querySelector('.product-img'); 
+        const addToCartBtn = card.querySelector('.add-to-cart-btn');
+
+        // --- Add to Cart Button Logic ---
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent redirect to detail page
+                e.preventDefault();
+
+                const titleEl = card.querySelector('.title');
+                const priceEl = card.querySelector('.price');
+                const imgFrontEl = card.querySelector('.img-front');
+
+                if (titleEl && priceEl && imgFrontEl) {
+                    const item = {
+                        title: titleEl.textContent.trim(),
+                        price: priceEl.textContent.trim(),
+                        image: imgFrontEl.src
+                    };
+                    cart.push(item);
+                    updateCartUI();
+                    cartDrawer?.classList.add('open'); // Open the cart drawer
+                }
+            });
+        }
 
         if (clickableArea) {
             clickableArea.style.cursor = 'pointer'; // Click කළ හැකි බව පෙන්වීමට cursor එක වෙනස් කිරීම
@@ -269,11 +658,49 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // --- NEW: Back to Top Button Logic ---
+    const backToTopBtn = document.createElement('button');
+    backToTopBtn.id = 'backToTopBtn';
+    backToTopBtn.innerHTML = '↑';
+    document.body.appendChild(backToTopBtn);
+
+    window.addEventListener('scroll', () => {
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            backToTopBtn.style.display = "block";
+        } else {
+            backToTopBtn.style.display = "none";
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // --- NEW: Highlight Active Menu Link ---
+    const currentPage = window.location.pathname.split("/").pop();
+    const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a');
+    
+    navLinks.forEach(link => {
+        const linkPage = link.getAttribute('href');
+        if (linkPage === currentPage || (currentPage === '' && linkPage === 'index.html')) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+
+    // පිටුව load වෙද්දී login status එක check කරන්න
+    checkLoginStatus();
 });
 
 // Function for Video Muting (as referenced in your HTML)
-function toggleMute(videoId, btn) {
+function toggleMute(event, videoId, btn) {
+    event.preventDefault(); // නව සබැඳියට යාම නවත්වන්න
+    event.stopPropagation(); // වෙනත් click events ක්‍රියාත්මක වීම නවත්වන්න
+
     const video = document.getElementById(videoId);
+    
     if (video.muted) {
         video.muted = false;
         btn.innerText = '🔊';

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Burnix Cloth</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Oswald:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <a href="index.html" class="logo-link">
+                <img src="WhatsApp Image 2026-01-14 at 22.17.21.jpeg" class="logo-img">
+                <div class="logo-text">
+                    <span class="brand-name">Burnix Cloth</span>
+                    <span class="tagline">Lifestyle</span>
+                </div>
+            </a>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <!-- Left Side: Form -->
+        <div class="checkout-form-section">
+            <h2>Contact Information & Shipping Address</h2>
+            <form id="checkout-form">
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="fullName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="address" placeholder="Street Address" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="city" placeholder="City" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" placeholder="Phone Number" required>
+                </div>
+
+                <h2>Payment Method</h2>
+                <div class="payment-methods">
+                    <div class="payment-option active" data-method="cod">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Cash on Delivery</span>
+                    </div>
+                    <div class="payment-option" data-method="bank">
+                        <i class="fas fa-university"></i>
+                        <span>Bank Deposit / Transfer</span>
+                    </div>
+                    <div class="payment-option" data-method="card">
+                        <i class="far fa-credit-card"></i>
+                        <span>Credit / Debit Card</span>
+                    </div>
+                    <div class="payment-option" data-method="koko">
+                        <span style="font-weight: 900; color: #5c2d91; font-size: 18px; margin-right: 5px;">KOKO</span>
+                        <span>Pay in 3 Installments</span>
+                    </div>
+                </div>
+
+                <!-- Bank Details Section (Hidden by default) -->
+                <div id="bank-details" style="display: none; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;">
+                    <p style="margin-bottom: 5px;"><strong>Bank:</strong> Sampath Bank</p>
+                    <p style="margin-bottom: 5px;"><strong>Account Name:</strong> Burnix Cloth</p>
+                    <p style="margin-bottom: 5px;"><strong>Account No:</strong> 1002 5566 7788</p>
+                    <p style="margin-bottom: 5px;"><strong>Branch:</strong> Colombo</p>
+                    <p style="font-size: 12px; color: #666; margin-top: 10px;">Please send a photo of the slip to WhatsApp after payment.</p>
+                </div>
+
+                <!-- Card Payment Section (Hidden by default) -->
+                <div id="card-payment-section" style="display: none; margin-bottom: 20px;">
+                    <div class="card-logos">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-amex"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="cardName" placeholder="Cardholder Name" autocomplete="cc-name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="cardNumber" placeholder="Card Number" autocomplete="cc-number" inputmode="numeric">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><input type="text" id="cardExpiry" placeholder="MM / YY" autocomplete="cc-exp"></div>
+                        <div class="form-group"><input type="text" id="cardCVC" placeholder="CVC" autocomplete="cc-csc" inputmode="numeric"></div>
+                    </div>
+                    <p class="secure-payment-info"><i class="fas fa-lock"></i> Your payment is secure via a trusted payment gateway.</p>
+                </div>
+
+                <!-- Koko Payment Section (New Design) -->
+                <div id="koko-payment-section" class="koko-payment-container" style="display: none;">
+                    <div class="koko-header">
+                        <span class="koko-logo-text">KOKO</span>
+                        <span class="koko-tagline">Buy Now, Pay Later</span>
+                    </div>
+                    <div class="koko-details">
+                        <p id="koko-installment-msg" class="koko-amount-text">Split your payment into 3 interest-free installments.</p>
+                        <div class="koko-timeline">
+                            <div class="k-step"><span>1st</span><small>Today</small></div>
+                            <div class="k-line"></div>
+                            <div class="k-step"><span>2nd</span><small>30 Days</small></div>
+                            <div class="k-line"></div>
+                            <div class="k-step"><span>3rd</span><small>60 Days</small></div>
+                        </div>
+                    </div>
+                    <p class="secure-payment-info" style="color: #5c2d91;"><i class="fas fa-shield-alt"></i> You will be redirected to Koko to complete your purchase.</p>
+                </div>
+                
+                <button type="submit" class="place-order-btn">Place Order</button>
+            </form>
+        </div>
+
+        <!-- Right Side: Order Summary -->
+        <div class="checkout-summary-section">
+            <h2>Order Summary</h2>
+            <div id="summary-items-list">
+                <!-- Items will be injected here by JS -->
+            </div>
+            <div class="summary-totals">
+                <div class="total-row">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal">Rs. 0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Shipping</span>
+                    <span id="summary-shipping">Rs. 350.00</span>
+                </div>
+                <div class="total-row grand-total">
+                    <span>Total</span>
+                    <span id="summary-grand-total">Rs. 350.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section purpose">
+                <h3>PURPOSE</h3>
+                <p>Our mission is to enhance your style with high-quality, affordable accessories. We constantly improve our designs and quality, ensuring you get the best every day.</p>
+            </div>
+            <div class="footer-section">
+                <h3>CONNECT WITH US</h3>
+                <div class="footer-socials">
+                    <a href="#" class="social-icon tiktok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon whatsapp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-section links">
+                <h3>MAIN MENU</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="mens.html">Mens</a></li>
+                    <li><a href="womens.html">Womens</a></li>
+                </ul>
+            </div>
+            <div class="footer-section links">
+                <h3>INFORMATION & SUPPORT</h3>
+                <ul>
+                    <li><a href="#">Exchange Policy</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BC Classy Lifestyle. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Order Success Overlay (New Technology Animation) -->
+    <div id="orderSuccessOverlay" class="order-success-overlay">
+        <div class="checkmark-circle">
+            <div class="background"></div>
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+        </div>
+        <h2 class="success-text">Payment Successful!</h2>
+        <p id="orderIdDisplay" style="color: #d4af37; margin-top: 5px; font-size: 18px; letter-spacing: 1px; font-weight: bold;"></p>
+        <p style="color: #ccc; margin-top: 5px; font-size: 14px; opacity: 0.8;">Your order has been confirmed.</p>
+        
+        <div class="success-actions" style="margin-top: 30px; display: flex; gap: 15px; flex-direction: column; width: 100%; max-width: 300px;">
+            <button id="whatsappBtn" class="whatsapp-btn">
+                <i class="fab fa-whatsapp"></i> Send Order to Admin
+            </button>
+            <button id="homeBtn" class="home-btn">Return to Home</button>
+        </div>
+    </div>
+
+    <script src="checkout.js"></script>
+</body>
+</html>

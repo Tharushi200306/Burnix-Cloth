@@ -30,6 +30,12 @@ body {
     text-transform: uppercase; 
 }
 
+/* Active Link Style */
+.nav-links a.active {
+    color: #d4af37;
+    border-bottom: 2px solid #d4af37;
+}
+
 .nav-icons span { font-size: 24px; margin-left: 25px; cursor: pointer; }
 
 /* Logo Styles */
@@ -239,12 +245,58 @@ body {
     top: 15px;
     font-size: 30px;
 }
+/* Cart Drawer Styles */
+.cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 100%;
+    background: #fff;
+    z-index: 2000;
+    transition: 0.5s;
+    color: #000;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3); /* Modern shadow */
+    overflow-x: hidden; /* Hide horizontal overflow */
+}
 
 .cart-content { padding: 50px 20px; text-align: center; }
 .shop-btn {background: black; color: white; padding: 15px 30px; border: none; margin-top: 20px; cursor: pointer;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-* Navbar & Announcements */
+/* --- Animated Cart Icon --- */
+.nav-icons .cart-btn {
+    position: relative; /* Make this a positioning context */
+    display: inline-block;
+    cursor: pointer;
+}
+
+.nav-icons .cart-count {
+    position: absolute;
+    top: -8px; /* Adjust as needed */
+    transition: transform 0.3s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0; /* Initially hidden */
+    right: -8px; /* Adjust as needed */
+    background-color: #d4af37; /* Gold color */
+    color: black;
+    font-size: 12px;
+    padding: 3px 5px;
+    border-radius: 50%;
+    font-weight: bold;
+    z-index: 1;
+    animation: cartPop 0.4s ease-out;
+    transform-origin: bottom right;
+}
+
+.nav-icons .cart-count.show {
+    transform: scale(1);
+    opacity: 1; /* Make visible when the show class is present */
+}
+
+@keyframes cartPop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
 .announcement-bar { background: #f8f8f8; text-align: center; padding: 10px; font-size: 13px; letter-spacing: 1px; }
 .hamburger {
 font-size: 24px; cursor: pointer;color: white; /* Oyaage theme ekata anuwa */ margin-left: 15px; /* Icons athara ida thiyaganna */
@@ -256,6 +308,29 @@ font-size: 24px; cursor: pointer;color: white; /* Oyaage theme ekata anuwa */ ma
 
 .close-menu {
 font-size: 30px; cursor: pointer; display: none;
+}
+
+/* --- NEW: Auth Form Messages --- */
+.auth-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: none; /* Hidden by default */
+    text-align: center;
+    animation: fadeIn 0.5s;
+}
+
+.auth-message.success {
+    background-color: rgba(46, 191, 145, 0.2);
+    color: #2ebf91;
+    display: block;
+}
+
+.auth-message.error {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    display: block;
 }
 /* --- Submenu Logic --- */
 .submenu-list {
@@ -1483,6 +1558,27 @@ background-color: black;text-transform: uppercase;
     font-weight: bold;
 }
 
+.edit-btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.cancel-edit-btn {
+    padding: 6px 15px;
+    background: #444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.cancel-edit-btn:hover {
+    background: #666;
+}
+
 /* Reply Form */
 .reply-form-container {
     max-height: 0;
@@ -1565,6 +1661,46 @@ background-color: black;text-transform: uppercase;
 .comment-pagination a.active {
     background-color: #d4af37;
     color: #000;
+}
+
+/* --- Admin Notification Toast --- */
+.admin-notification {
+    position: fixed;
+    bottom: 20px;
+    right: -400px; /* Start off-screen */
+    width: 350px;
+    background-color: #2a2a2a;
+    color: white;
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 3000;
+    border-left: 5px solid #d4af37;
+    transition: right 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.admin-notification.show {
+    right: 20px; /* Slide in */
+}
+
+.notification-icon {
+    font-size: 24px;
+    color: #d4af37;
+}
+
+.notification-text strong {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.notification-text p {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
 }
 
 /* ============================================================
@@ -1663,4 +1799,503 @@ body {
     0% { transform: scale(1); }
     50% { transform: scale(0.9); background: #a88a2c; }
     100% { transform: scale(1); }
+}
+
+/* --- 7. Cart Total Animation --- */
+@keyframes total-update-flash {
+    0% { background-color: transparent; transform: scale(1); }
+    50% { 
+        background-color: #d4af37; /* Gold flash */
+        color: black; 
+        transform: scale(1.1);
+        padding: 2px 6px;
+        border-radius: 5px;
+    }
+    100% { background-color: transparent; transform: scale(1); }
+}
+
+.total-updated {
+    animation: total-update-flash 0.7s ease-out;
+}
+
+/* --- 8. "Buy Now" Button Styling --- */
+.buy-now-btn-cart {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #d4af37, #f8e6a0, #d4af37);
+    background-size: 200% auto;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.4s ease, transform 0.3s ease;
+    animation: shine 3s infinite linear;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);
+}
+
+.buy-now-btn-cart:hover {
+    transform: scale(1.03);
+    background-position: right center; /* change the direction of the shine */
+}
+
+@keyframes shine {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+/* --- Checkout Page Styles --- */
+.checkout-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    gap: 40px;
+    color: #333; /* Dark text on light background for readability */
+}
+
+.checkout-form-section {
+    flex: 1.5;
+    min-width: 320px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.checkout-summary-section {
+    flex: 1;
+    min-width: 300px;
+    background: #f7f7f7;
+    padding: 30px;
+    border-radius: 15px;
+    height: fit-content; /* Make it not stretch full height */
+    position: sticky;
+    top: 120px; /* Stick below navbar */
+}
+
+.checkout-form-section h2, .checkout-summary-section h2 {
+    font-size: 20px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.checkout-form-section .form-group {
+    margin-bottom: 20px;
+}
+
+.checkout-form-section input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.payment-option {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s;
+}
+
+.payment-option:hover {
+    border-color: #aaa;
+}
+
+.payment-option.active {
+    border-color: #d4af37;
+    background-color: #fefaf0;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.payment-option i {
+    font-size: 22px;
+    color: #555;
+}
+
+.payment-option.active i {
+    color: #d4af37;
+}
+
+/* Order Summary Styles */
+#summary-items-list {
+    max-height: 40vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-item-img {
+    position: relative;
+}
+
+.summary-item-img img {
+    width: 65px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.summary-item-qty {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #555;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    border: 2px solid #f7f7f7;
+}
+
+.summary-item-details { flex: 1; }
+.summary-item-title { font-weight: bold; font-size: 14px; margin: 0; }
+.summary-item-size-color { font-size: 12px; color: #777; margin-top: 4px; }
+.summary-item-price { font-size: 14px; font-weight: bold; }
+.summary-totals { border-top: 1px solid #ddd; padding-top: 20px; }
+.total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 15px; }
+.total-row.grand-total { font-size: 18px; font-weight: bold; margin-top: 15px; }
+
+@media (max-width: 768px) {
+    .checkout-container { flex-direction: column-reverse; gap: 20px; }
+    .checkout-summary-section { position: static; }
+}
+
+/* =========================================
+   NEW: CHECKOUT PAGE ANIMATIONS
+   ========================================= */
+
+/* 1. Page Load Animation (Slide Up) */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.checkout-form-section {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0; /* Start hidden */
+}
+
+.checkout-summary-section {
+    animation: fadeInUp 0.8s ease-out forwards 0.2s; /* 0.2s delay */
+    opacity: 0; /* Start hidden */
+}
+
+/* 2. Input Focus Animation */
+.checkout-form-section input {
+    transition: all 0.3s ease;
+    border: 2px solid #eee;
+}
+
+.checkout-form-section input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+    transform: translateY(-2px);
+}
+
+/* 3. Order Success Overlay & Animation */
+.order-success-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.92); z-index: 5000;
+    display: flex; justify-content: center; align-items: center; flex-direction: column;
+    opacity: 0; visibility: hidden; transition: all 0.5s ease;
+    backdrop-filter: blur(8px);
+}
+
+.order-success-overlay.active { opacity: 1; visibility: visible; }
+
+/* Checkmark Circle */
+.checkmark-circle {
+    width: 100px; height: 100px; position: relative;
+    display: inline-block; vertical-align: top; margin-bottom: 20px;
+}
+.checkmark-circle .background {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: #2ebf91; position: absolute;
+    transform: scale(0);
+    animation: scaleIn 0.4s cubic-bezier(0.65, 0, 0.45, 1) forwards 0.2s;
+}
+.checkmark-circle .checkmark {
+    width: 100px; height: 100px; position: absolute;
+    stroke-dasharray: 166; stroke-dashoffset: 166;
+    stroke-width: 5; stroke: #fff; fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards 0.5s;
+}
+
+@keyframes scaleIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+@keyframes stroke { 100% { stroke-dashoffset: 0; } }
+
+.success-text {
+    color: white; font-family: 'Oswald', sans-serif; font-size: 32px;
+    text-transform: uppercase; letter-spacing: 2px;
+    opacity: 0; transform: translateY(20px);
+    transition: all 0.5s ease 0.8s;
+}
+
+.order-success-overlay.active .success-text { opacity: 1; transform: translateY(0); }
+
+/* Error Shake Animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+.shake { animation: shake 0.5s; border: 1px solid red !important; }
+
+/* --- NEW: Card Payment Form Styles --- */
+#card-payment-section {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    background: #fdfdfd;
+}
+
+.card-logos {
+    display: flex;
+    gap: 15px;
+    font-size: 32px;
+    color: #a0a0a0;
+    margin-bottom: 20px;
+}
+
+.card-logos .fa-cc-visa { color: #1a1f71; }
+.card-logos .fa-cc-mastercard { color: #eb001b; }
+.card-logos .fa-cc-amex { color: #2e77bc; }
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+#card-payment-section input {
+    background: #fff;
+    border-width: 1px;
+}
+
+#card-payment-section input:focus {
+    transform: none; /* Override general input focus animation for this section */
+}
+
+.secure-payment-info {
+    font-size: 12px;
+    color: #28a745; /* Green color for trust */
+    text-align: center;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* --- NEW: Koko Payment Styles --- */
+.koko-payment-container {
+    background: #fdfaff;
+    border: 1px solid #e0d0f0;
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(92, 45, 145, 0.05);
+}
+
+.koko-header { margin-bottom: 15px; }
+.koko-logo-text { 
+    font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 900; color: #5c2d91; letter-spacing: 1px; display: block; line-height: 1;
+}
+.koko-tagline { font-size: 12px; color: #888; letter-spacing: 2px; text-transform: uppercase; }
+
+.koko-amount-text { font-size: 16px; color: #333; margin-bottom: 20px; }
+.koko-amount-text strong { color: #5c2d91; font-size: 18px; }
+
+.koko-timeline {
+    display: flex; justify-content: center; align-items: center; gap: 5px; margin: 20px 0;
+}
+
+.k-step {
+    display: flex; flex-direction: column; align-items: center; width: 60px;
+}
+.k-step span {
+    background: #5c2d91; color: white; width: 35px; height: 35px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center; font-size: 12px; font-weight: bold; margin-bottom: 5px;
+}
+.k-step small { font-size: 11px; color: #666; font-weight: bold; }
+
+.k-line {
+    height: 2px; width: 40px; background: #e0d0f0; margin-bottom: 15px;
+}
+
+/* Button State for Koko */
+.place-order-btn.koko-active {
+    background: #5c2d91;
+    color: white;
+}
+.place-order-btn.koko-active:hover {
+    background: #4a2475;
+}
+
+/* --- NEW: Success Overlay Buttons --- */
+.whatsapp-btn {
+    background: #25D366;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.whatsapp-btn:hover {
+    background: #1ebc57;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+.home-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #ddd;
+    padding: 10px; border-radius: 50px; cursor: pointer; transition: 0.3s;
+}
+.home-btn:hover { background: rgba(255,255,255,0.1); color: white; border-color: white; }
+
+/* --- NEW: Back to Top Button --- */
+#backToTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    left: 30px; /* Left side positioning */
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #d4af37;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+#backToTopBtn:hover {
+    background-color: #b5952f;
+    transform: translateY(-5px);
+}
+
+/* Cart Badge Fix */
+.nav-icons { position: relative; }
+#cart-btn { position: relative; display: inline-block; }
+.cart-count-badge { position: absolute; top: -8px; right: -8px; background: #d4af37; color: #000; font-size: 10px; font-weight: bold; padding: 2px 5px; border-radius: 50%; min-width: 18px; text-align: center; }
+
+/* --- Search Overlay Results --- */
+.search-results-container {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 10px;
+    width: 100%;
+}
+
+.search-result-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    text-decoration: none;
+    color: white;
+    transition: transform 0.3s, background 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.search-result-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+}
+
+.search-result-img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.search-result-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.search-result-price {
+    font-size: 12px;
+    color: #d4af37;
+    font-weight: bold;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #aaa;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+/* Scrollbar for search results */
+.search-results-container::-webkit-scrollbar {
+    width: 6px;
+}
+.search-results-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+.search-results-container::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 3px;
 }

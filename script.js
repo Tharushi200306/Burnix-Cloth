@@ -608,7 +608,8 @@ document.addEventListener('DOMContentLoaded', function() {
     userBtnEl?.addEventListener('click', () => {
         const isLoggedIn = userBtnEl.dataset.loggedIn === 'true';
         if (isLoggedIn) {
-            handleLogout(); // Login වෙලා නම්, logout කරන්න
+            // Login වී ඇත්නම් Profile Page එකට යන්න
+            window.location.href = 'profile.html';
         } else {
             loginOverlay?.classList.add('open'); // නැත්නම්, login overlay එක open කරන්න
         }
@@ -847,6 +848,59 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize Admin Edit Mode
     initAdminEditMode();
+
+    // --- PROFILE PAGE LOGIC ---
+    if (window.location.pathname.includes('profile.html')) {
+        const profileForm = document.getElementById('profile-form');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const user = JSON.parse(localStorage.getItem('burnixLoggedInUser'));
+
+        if (!user) {
+            window.location.href = 'index.html'; // Log වී නැත්නම් Home එකට යවන්න
+        } else {
+            // දත්ත පෙන්වන්න
+            const pName = document.getElementById('profileName');
+            const pEmail = document.getElementById('profileEmail');
+            const pInit = document.getElementById('profile-initial');
+            
+            if (pName) pName.value = user.name;
+            if (pEmail) pEmail.value = user.email;
+            if (pInit) pInit.textContent = user.name.charAt(0).toUpperCase();
+
+            // Save Changes (ගිණුම වෙනස් කිරීම)
+            if (profileForm) {
+                profileForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const newName = document.getElementById('profileName').value;
+                    const newPass = document.getElementById('profilePassword').value;
+
+                    // දත්ත යාවත්කාලීන කිරීම
+                    user.name = newName;
+                    if (newPass) user.password = newPass;
+
+                    // ප්‍රධාන Users ලැයිස්තුව update කිරීම
+                    const userIndex = users.findIndex(u => u.email === user.email);
+                    if (userIndex !== -1) {
+                        users[userIndex] = user;
+                        saveUsers(); // LocalStorage update
+                        localStorage.setItem('burnixLoggedInUser', JSON.stringify(user)); // Session update
+                        alert('Profile updated successfully!');
+                    }
+                });
+            }
+
+            // Logout Button Logic
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to logout?')) {
+                        localStorage.removeItem('burnixLoggedInUser');
+                        updateNavOnLogout();
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
+        }
+    }
 });
 
 // Function for Video Muting (as referenced in your HTML)

@@ -27,6 +27,9 @@
         <div class="checkout-form-section">
             <h2>Contact Information & Shipping Address</h2>
             <form id="checkout-form">
+                <!-- Security: Honeypot field to trap bots (Hidden) -->
+                <input type="text" id="website-honey" style="display:none" tabindex="-1" autocomplete="off">
+
                 <div class="form-group">
                     <input type="email" id="email" placeholder="Email Address" required>
                 </div>

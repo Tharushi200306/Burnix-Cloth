@@ -80,7 +80,7 @@
             <!-- Login Form -->
             <div class="form-container login-form active">
                 <h2 style="color: #d4af37; margin-bottom: 10px;">WELCOME BACK</h2>
-                <p style="color: #ccc; margin-bottom: 30px; font-size: 14px;">Login to access your account</p>
+                <p style="color: #ccc; margin-bottom: 20px;">Login to access your account</p>
                 <form id="loginForm">
                     <div class="auth-message"></div> <!-- For success/error messages -->
                     <div class="input-group">
@@ -97,7 +97,7 @@
             <!-- Register Form -->
             <div class="form-container register-form">
                 <h2 style="color: #d4af37; margin-bottom: 10px;">CREATE ACCOUNT</h2>
-                <p style="color: #ccc; margin-bottom: 30px; font-size: 14px;">Join the B-Classy Lifestyle</p>
+                <p style="color: #ccc; margin-bottom: 20px;">Join the B-Classy Lifestyle</p>
                 <form id="registerForm">
                     <div class="auth-message"></div> <!-- For success/error messages -->
                     <div class="input-group"><input type="text" id="registerName" placeholder="Full Name" required></div>
@@ -780,35 +780,41 @@
 </div>
 
 <div class="small-category-grid reveal">
-    <a href="necklaces.html" class="small-card">
+    <div class="small-card" onclick="viewItemDetail('Elegant Necklace', 'Rs. 2,500.00', 'images.jpg')">
         <img src="images.jpg" alt="Necklaces">
+        <div class="small-card-overlay"><span class="small-card-btn">View</span></div>
         <p>NECKLACES</p>
-    </a>
+    </div>
 
-    <a href="bracelets.html" class="small-card">
+    <div class="small-card" onclick="viewItemDetail('Silver Bracelet', 'Rs. 1,500.00', 'download (2).jpg')">
         <img src="download (2).jpg" alt="Bracelets">
+        <div class="small-card-overlay"><span class="small-card-btn">View</span></div>
         <p>BRACELETS</p>
-    </a>
+    </div>
 
-    <a href="rings.html" class="small-card">
+    <div class="small-card" onclick="viewItemDetail('Gold Plated Ring', 'Rs. 1,200.00', 'download.jpg')">
         <img src="download.jpg" alt="Rings">
+        <div class="small-card-overlay"><span class="small-card-btn">View</span></div>
         <p>RINGS</p>
-    </a>
+    </div>
 
-    <a href="earrings.html" class="small-card">
+    <div class="small-card" onclick="viewItemDetail('Diamond Earring', 'Rs. 1,800.00', 'download (2).jpg')">
         <img src="download (2).jpg" alt="Earrings">
+        <div class="small-card-overlay"><span class="small-card-btn">View</span></div>
         <p>EARRINGS</p>
-    </a>
+    </div>
 
-    <a href="anklets.html" class="small-card">
+    <div class="small-card" onclick="viewItemDetail('Fancy Anklet', 'Rs. 950.00', 'download.jpg')">
         <img src="download.jpg" alt="Anklets">
+        <div class="small-card-overlay"><span class="small-card-btn">View</span></div>
         <p>ANKLETS</p>
-    </a>
+    </div>
 
-    <a href="sets.html" class="small-card">
+    <div class="small-card" onclick="viewItemDetail('Full Jewellery Set', 'Rs. 5,000.00', 'images.jpg')">
         <img src="images.jpg" alt="Jewellery Sets">
+        <div class="small-card-overlay"><span class="small-card-btn">View</span></div>
         <p>JEWELLERY SETS</p>
-    </a>
+    </div>
 </div>
 
 <section class="testimonial-section reveal">

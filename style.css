@@ -2387,6 +2387,65 @@ body {
     cursor: pointer;
 }
 
+/* --- PROFILE PAGE STYLES --- */
+.profile-container {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 30px;
+    background: #111;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+    color: white;
+    border: 1px solid #333;
+}
+
+.profile-container h1 {
+    margin-bottom: 30px;
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.profile-avatar {
+    width: 100px; height: 100px;
+    background: #d4af37; color: black;
+    font-size: 40px; font-weight: bold;
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    margin: 0 auto 30px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.profile-form .form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.profile-form label {
+    display: block; margin-bottom: 8px; color: #aaa; font-size: 14px;
+}
+
+.profile-form input {
+    width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: white; border-radius: 5px; font-size: 16px;
+}
+
+.save-profile-btn {
+    width: 100%; padding: 12px; background: #d4af37; color: black; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; text-transform: uppercase;
+}
+
+.save-profile-btn:hover {
+    background: white; transform: scale(1.02);
+}
+
+.logout-btn {
+    width: 100%; padding: 12px; background: #c0392b; color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase;
+}
+
+.logout-btn:hover {
+    background: #e74c3c; transform: scale(1.02);
+}
+
 /* Responsive adjustments for login overlay */
 @media (max-height: 600px) {
     .overlay-content {

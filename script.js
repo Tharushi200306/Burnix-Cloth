@@ -20,6 +20,45 @@ function showSlides() {
     }
 }
 
+// --- NEW: Category Navigation & Filtering Logic ---
+
+// 1. Function to navigate to shop page with category filter
+function navigateToCategory(category) {
+    // Redirect to shop.html with a query parameter
+    window.location.href = `shop.html?category=${encodeURIComponent(category)}`;
+}
+
+// 2. Function to view specific item details from small cards (New)
+function viewItemDetail(title, price, imageSrc) {
+    window.location.href = `product-detail.html?title=${encodeURIComponent(title)}&price=${encodeURIComponent(price)}&images=${encodeURIComponent(imageSrc)}`;
+}
+
+// 2. Logic to filter products on the Shop Page based on URL parameter
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryFilter = urlParams.get('category');
+    
+    // Only run this if we are on the shop page and have a filter
+    if (categoryFilter && document.querySelector('.shop-page-grid')) {
+        // Update the header title
+        const sectionHeader = document.querySelector('.section-header h2');
+        if (sectionHeader) sectionHeader.textContent = `${categoryFilter} Collection`;
+        
+        const products = document.querySelectorAll('.shop-page-grid .product-card');
+        
+        products.forEach(card => {
+            const title = card.querySelector('.title').textContent.toLowerCase();
+            // Check if product title contains the category name (e.g., "Necklace")
+            if (title.includes(categoryFilter.toLowerCase())) {
+                card.style.display = 'block';
+                card.style.animation = 'cardFadeInUp 0.5s ease forwards'; // Re-trigger animation
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+});
+
 // සෑම තත්පර 4කට වරක් රූපය ස්වයංක්‍රීයව මාරු වේ (4000ms = 4s)
 setInterval(showSlides, 4000);
 
@@ -153,12 +192,78 @@ window.addEventListener('load', () => {
 // පරිශීලක දත්ත මතක තබා ගැනීමට localStorage භාවිතා කරයි
 const users = JSON.parse(localStorage.getItem('burnixUsers')) || [
     // Test කිරීම සඳහා නියැදි පරිශීලකයෙක්
-    { name: 'Test User', email: 'test@example.com', password: 'password123' }
+    { name: 'Test User', email: 'test@example.com', password: 'password123' },
+    // Admin Account (මෙන්න Admin Account එක)
+    { name: 'Admin', email: 'tharunimmi24@gmail.com', password: '200066', isAdmin: true }
 ];
 
 function saveUsers() {
     // නව පරිශීලකයන් localStorage වෙත save කරයි
     localStorage.setItem('burnixUsers', JSON.stringify(users));
+}
+
+// --- NEW: Product Database & Rendering Logic ---
+const initialProducts = [
+    { id: 1, title: "New Stylish T-Shirt", price: "Rs. 2,500.00", image: "images/your-product-front.jpg", category: "Men", isNew: true },
+    { id: 2, title: "Minimalist Black Pendant Necklace", price: "Rs. 1,750.00", image: "https://via.placeholder.com/400x500?text=Product+2+Front", category: "Jewelry" },
+    { id: 3, title: "Silver Chain Bracelet", price: "Rs. 3,200.00", image: "https://via.placeholder.com/400x500?text=Product+3+Front", category: "Jewelry" },
+    { id: 4, title: "Gold Plated Ring", price: "Rs. 1,500.00", image: "https://via.placeholder.com/400x500?text=Product+4+Front", category: "Jewelry" },
+    { id: 5, title: "Classic Watch", price: "Rs. 5,500.00", image: "https://via.placeholder.com/400x500?text=Product+5+Front", category: "Men" },
+    { id: 6, title: "Stylish Blouse", price: "Rs. 3,500.00", image: "images.jpg", category: "Women", isNew: true },
+    { id: 7, title: "Elegant Dress", price: "Rs. 4,750.00", image: "download.jpg", category: "Women" },
+    { id: 8, title: "Casual Skirt", price: "Rs. 2,200.00", image: "download (2).jpg", category: "Women" },
+    { id: 9, title: "Handbag", price: "Rs. 3,000.00", image: "images.jpg", category: "Women" },
+    { id: 10, title: "High Heels", price: "Rs. 4,500.00", image: "download (2).jpg", category: "Women" }
+];
+
+// Initialize Products in LocalStorage if empty
+if (!localStorage.getItem('burnixProducts')) {
+    localStorage.setItem('burnixProducts', JSON.stringify(initialProducts));
+}
+
+function renderProducts(containerId, filterCategory = 'All') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const products = JSON.parse(localStorage.getItem('burnixProducts')) || [];
+    container.innerHTML = ''; // Clear existing content
+
+    products.forEach(product => {
+        // Filter logic
+        if (filterCategory !== 'All' && product.category !== filterCategory && filterCategory !== 'BestSeller') {
+            return;
+        }
+        // For index page (Best Sellers), just show first 8 items for now
+        if (filterCategory === 'BestSeller' && products.indexOf(product) > 7) return;
+
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <div class="product-img">
+                <img src="${product.image}" class="img-front">
+                <img src="${product.image}" class="img-back">
+                ${product.isNew ? '<span class="badge">NEW</span>' : ''}
+                <div class="add-to-cart-overlay">
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-info">
+                <p class="title">${product.title}</p>
+                <p class="price">${product.price}</p>
+                <p class="installment-text">
+                    or 3 X <span>Rs ${(parseFloat(product.price.replace(/[^0-9.]/g, ''))/3).toFixed(2)}</span> with 
+                    <span class="mintpay">mintpay</span> <span class="koko">KOKO</span>
+                </p>
+                <div class="color-options">
+                    <span class="dot black active"></span><span class="dot silver"></span><span class="dot gold"></span>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+    
+    // Re-apply edits after rendering products
+    applyEdits();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -224,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateNavOnLogin(user) {
         const initial = user.name.charAt(0).toUpperCase();
         userBtnEl.textContent = initial;
-        userBtnEl.style.background = '#d4af37';
+        userBtnEl.style.background = user.isAdmin ? '#d63031' : '#d4af37'; // Admin නම් රතු පාට, නැත්නම් රන් පාට
         userBtnEl.style.color = 'black';
         userBtnEl.style.borderRadius = '50%';
         userBtnEl.style.width = '30px';
@@ -369,7 +474,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 cartBtn.appendChild(badge);
             }
             badge.textContent = totalItemsCount;
-            badge.style.display = totalItemsCount > 0 ? 'block' : 'none';
+            badge.style.display = totalItemsCount > 0 ? 'flex' : 'none'; /* Flex භාවිතා කළේ අංකය මැදට ගැනීමටයි */
+            
+            // Animation එක නැවත පණ ගැන්වීමට (Re-trigger animation)
+            badge.classList.remove('pop-anim');
+            void badge.offsetWidth; // Trigger reflow
+            badge.classList.add('pop-anim');
         }
     }
 
@@ -447,6 +557,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial Load
     updateCartUI();
     // --- CART FUNCTIONALITY END ---
+
+    // --- NEW: Listen for Cart Updates from Product Detail Page ---
+    window.addEventListener('cartUpdated', () => {
+        cart = JSON.parse(localStorage.getItem('burnixCart')) || [];
+        updateCartUI();
+        // Open cart drawer automatically to show the user
+        const cartDrawer = document.getElementById('cart-drawer');
+        if (cartDrawer) cartDrawer.classList.add('open');
+    });
 
     // Open Search
     searchBtn?.addEventListener('click', () => {
@@ -692,6 +811,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // පිටුව load වෙද්දී login status එක check කරන්න
     checkLoginStatus();
+
+    // --- Render Products based on Page ---
+    renderProducts('shop-grid-all', 'All');       // For shop.html
+    renderProducts('shop-grid-mens', 'Men');      // For mens.html
+    renderProducts('shop-grid-womens', 'Women');  // For womens.html
+    renderProducts('home-best-sellers', 'BestSeller'); // For index.html
+
+    // Initialize Admin Edit Mode
+    initAdminEditMode();
 });
 
 // Function for Video Muting (as referenced in your HTML)
@@ -707,5 +835,130 @@ function toggleMute(event, videoId, btn) {
     } else {
         video.muted = true;
         btn.innerText = '🔇';
+    }
+}
+
+// --- ADMIN CMS: EDIT ANY PAGE FUNCTIONALITY ---
+
+function initAdminEditMode() {
+    // Check if logged in user is Admin
+    const user = JSON.parse(localStorage.getItem('burnixLoggedInUser'));
+    if (!user || !user.isAdmin) return;
+
+    // Create Toggle Button
+    const editBtn = document.createElement('button');
+    editBtn.innerHTML = '✏️ Edit Site';
+    editBtn.id = 'admin-edit-toggle';
+    document.body.appendChild(editBtn);
+
+    editBtn.addEventListener('click', toggleEditMode);
+    
+    // Apply saved edits on load
+    applyEdits();
+}
+
+let isEditMode = false;
+
+function toggleEditMode() {
+    isEditMode = !isEditMode;
+    const btn = document.getElementById('admin-edit-toggle');
+    
+    if (isEditMode) {
+        btn.innerHTML = '💾 Save Changes';
+        btn.classList.add('active');
+        document.body.classList.add('edit-mode-active');
+        enableEditing();
+    } else {
+        btn.innerHTML = '✏️ Edit Site';
+        btn.classList.remove('active');
+        document.body.classList.remove('edit-mode-active');
+        disableEditing();
+        alert('Changes Saved Successfully!');
+    }
+}
+
+function enableEditing() {
+    // Make text editable
+    const textElements = document.querySelectorAll('h1, h2, h3, p, span, a, button, label, .title, .price');
+    textElements.forEach(el => {
+        el.contentEditable = "true";
+        el.classList.add('editable-text');
+        
+        // Save on blur (when clicking away)
+        el.addEventListener('blur', function() {
+            saveEdit(this, 'text');
+        });
+    });
+
+    // Make images editable
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        img.classList.add('editable-img');
+        img.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // Stop other clicks
+            const newSrc = prompt("Enter new Image URL:", img.src);
+            if (newSrc) {
+                img.src = newSrc;
+                saveEdit(img, 'image');
+            }
+        };
+    });
+}
+
+function disableEditing() {
+    const textElements = document.querySelectorAll('.editable-text');
+    textElements.forEach(el => {
+        el.contentEditable = "false";
+        el.classList.remove('editable-text');
+    });
+
+    const images = document.querySelectorAll('.editable-img');
+    images.forEach(img => {
+        img.classList.remove('editable-img');
+        img.onclick = null; // Remove click handler
+    });
+}
+
+// Helper to generate a unique selector for an element
+function getUniqueSelector(el) {
+    if (el.id) return '#' + el.id;
+    if (el === document.body) return 'body';
+    let index = 1;
+    let sibling = el;
+    while ((sibling = sibling.previousElementSibling)) {
+        if (sibling.tagName === el.tagName) index++;
+    }
+    return getUniqueSelector(el.parentElement) + ' > ' + el.tagName + ':nth-of-type(' + index + ')';
+}
+
+function saveEdit(element, type) {
+    const page = window.location.pathname.split('/').pop() || 'index.html';
+    const selector = getUniqueSelector(element);
+    const content = type === 'image' ? element.src : element.innerHTML;
+    
+    let allEdits = JSON.parse(localStorage.getItem('burnixSiteEdits')) || {};
+    if (!allEdits[page]) allEdits[page] = {};
+    
+    allEdits[page][selector] = { type, content };
+    localStorage.setItem('burnixSiteEdits', JSON.stringify(allEdits));
+}
+
+function applyEdits() {
+    const page = window.location.pathname.split('/').pop() || 'index.html';
+    const allEdits = JSON.parse(localStorage.getItem('burnixSiteEdits')) || {};
+    const pageEdits = allEdits[page];
+    
+    if (pageEdits) {
+        for (const [selector, data] of Object.entries(pageEdits)) {
+            const el = document.querySelector(selector);
+            if (el) {
+                if (data.type === 'image') {
+                    el.src = data.content;
+                } else {
+                    el.innerHTML = data.content;
+                }
+            }
+        }
     }
 }
